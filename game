@@ -1,0 +1,99 @@
+import pygame
+
+# Define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+
+# Set the dimensions of the game window
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+
+# Initialize Pygame
+pygame.init()
+
+# Set the size of the game window
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+# Set the title of the game window
+pygame.display.set_caption("Capture the Flag")
+
+# Set the font used for the score display
+font = pygame.font.SysFont('Calibri', 25, True, False)
+
+# Set the initial positions of the flags
+red_flag_pos = (50, 50)
+blue_flag_pos = (WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50)
+
+# Set the initial positions of the players
+player1_pos = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 50)
+player2_pos = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 50)
+
+# Set the initial score values for each team
+red_score = 0
+blue_score = 0
+
+# Game loop
+running = True
+while running:
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Get the state of the keyboard
+    keys = pygame.key.get_pressed()
+
+    # Move player 1 based on keyboard input
+    if keys[pygame.K_w]:
+        player1_pos = (player1_pos[0], player1_pos[1] - 5)
+    if keys[pygame.K_a]:
+        player1_pos = (player1_pos[0] - 5, player1_pos[1])
+    if keys[pygame.K_s]:
+        player1_pos = (player1_pos[0], player1_pos[1] + 5)
+    if keys[pygame.K_d]:
+        player1_pos = (player1_pos[0] + 5, player1_pos[1])
+
+    # Move player 2 based on keyboard input
+    if keys[pygame.K_UP]:
+        player2_pos = (player2_pos[0], player2_pos[1] - 5)
+    if keys[pygame.K_LEFT]:
+        player2_pos = (player2_pos[0] - 5, player2_pos[1])
+    if keys[pygame.K_DOWN]:
+        player2_pos = (player2_pos[0], player2_pos[1] + 5)
+    if keys[pygame.K_RIGHT]:
+        player2_pos = (player2_pos[0] + 5, player2_pos[1])
+
+    # Check if player 1 has captured the red flag
+    if player1_pos == red_flag_pos:
+        red_score += 1
+        red_flag_pos = (50, 50)
+
+    # Check if player 2 has captured the blue flag
+    if player2_pos == blue_flag_pos:
+        blue_score += 1
+        blue_flag_pos = (WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50)
+
+    # Clear the screen
+    screen.fill(BLACK)
+
+    # Draw the flags
+    pygame.draw.circle(screen, RED, red_flag_pos, 10)
+    pygame.draw.circle(screen, BLUE, blue_flag_pos, 10)
+
+    # Draw the players
+    pygame.draw.circle(screen, RED, player1_pos, 20)
+    pygame.draw.circle(screen, BLUE, player2_pos, 20)
+    
+    # Draw the score display
+red_score_display = font.render(f"Red: {red_score}", True, RED)
+blue_score_display = font.render(f"Blue: {blue_score}", True, BLUE)
+screen.blit(red_score_display, (50, 10))
+screen.blit(blue_score_display, (WINDOW_WIDTH - 100, 10))
+
+# Update the display
+pygame.display.flip()
+
+# Set the frame rate
+clock.tick(60)
